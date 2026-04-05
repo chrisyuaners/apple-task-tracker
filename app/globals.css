@@ -5,6 +5,7 @@
   --bg: #f2f2f7;
   --bg-elevated: #ffffff;
   --bg-grouped: #ffffff;
+  --bg-grouped-secondary: #f9f9fb;
   --separator: rgba(60, 60, 67, 0.29);
   --separator-opaque: #c6c6c8;
   --label: #000000;
@@ -18,18 +19,29 @@
   --priority-low: #8e8e93;
   --priority-medium: #ff9500;
   --priority-high: #ff3b30;
-  --overlay: rgba(0, 0, 0, 0.4);
-  --sheet-handle: rgba(60, 60, 67, 0.3);
+  --overlay: rgba(0, 0, 0, 0.33);
+  --sheet-handle: rgba(60, 60, 67, 0.36);
   --focus-ring: rgba(0, 122, 255, 0.45);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --fill-tertiary: rgba(118, 118, 128, 0.12);
+  --fill-quaternary: rgba(116, 116, 128, 0.08);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-fab: 0 4px 14px rgba(0, 122, 255, 0.35), 0 2px 6px rgba(0, 0, 0, 0.08);
+  --shadow-sheet: 0 -12px 48px rgba(0, 0, 0, 0.12), 0 -2px 12px rgba(0, 0, 0, 0.06);
+  --shadow-modal: 0 24px 80px rgba(0, 0, 0, 0.2), 0 8px 24px rgba(0, 0, 0, 0.08);
   --radius-row: 12px;
-  --radius-sheet: 24px;
+  --radius-sheet: 20px;
+  --radius-input: 10px;
+  --header-blur-bg: color-mix(in srgb, var(--bg) 72%, transparent);
+  --sticky-header-bg: color-mix(in srgb, var(--bg) 88%, transparent);
 }
 
 [data-theme="dark"] {
   --bg: #000000;
   --bg-elevated: #1c1c1e;
   --bg-grouped: #1c1c1e;
+  --bg-grouped-secondary: #2c2c2e;
   --separator: rgba(84, 84, 88, 0.65);
   --separator-opaque: #38383a;
   --label: #ffffff;
@@ -43,10 +55,19 @@
   --priority-low: #8e8e93;
   --priority-medium: #ff9f0a;
   --priority-high: #ff453a;
-  --overlay: rgba(0, 0, 0, 0.55);
-  --sheet-handle: rgba(235, 235, 245, 0.3);
-  --focus-ring: rgba(10, 132, 255, 0.5);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --overlay: rgba(0, 0, 0, 0.52);
+  --sheet-handle: rgba(235, 235, 245, 0.4);
+  --focus-ring: rgba(10, 132, 255, 0.55);
+  --fill-tertiary: rgba(118, 118, 128, 0.24);
+  --fill-quaternary: rgba(118, 118, 128, 0.18);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 12px 48px rgba(0, 0, 0, 0.45), 0 4px 16px rgba(0, 0, 0, 0.3);
+  --shadow-fab: 0 4px 20px rgba(10, 132, 255, 0.4), 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-sheet: 0 -12px 48px rgba(0, 0, 0, 0.4), 0 -2px 12px rgba(0, 0, 0, 0.25);
+  --shadow-modal: 0 24px 80px rgba(0, 0, 0, 0.55), 0 8px 32px rgba(0, 0, 0, 0.35);
+  --header-blur-bg: color-mix(in srgb, var(--bg) 76%, transparent);
+  --sticky-header-bg: color-mix(in srgb, var(--bg) 90%, transparent);
 }
 
 @theme inline {
@@ -81,6 +102,12 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -98,12 +125,17 @@ body {
   @media (prefers-reduced-motion: no-preference) {
     transition-property: color, background-color, border-color, opacity, transform,
       box-shadow;
-    transition-duration: 220ms;
+    transition-duration: 200ms;
     transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
   }
 }
 
-/* Focus visible — subtle iOS-like ring */
+@utility motion-safe-press {
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform 140ms cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+}
+
 :focus-visible {
   outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
@@ -113,7 +145,14 @@ body {
   outline: none;
 }
 
-/* Radix dialog scroll lock */
+/* Inputs: ring matches system accent */
+.input-surface:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent),
+    inset 0 0 0 1px var(--separator-opaque);
+}
+
 body[data-scroll-locked] {
   overflow: hidden !important;
 }

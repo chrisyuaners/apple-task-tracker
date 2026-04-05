@@ -35,15 +35,37 @@ export function TaskList() {
 
   if (filteredTasks.length === 0) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center px-6 py-20 text-center">
+      <div className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">
+        <div
+          className="mb-6 flex h-[72px] w-[72px] items-center justify-center rounded-[20px]"
+          style={{
+            background: "var(--fill-tertiary)",
+            boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--separator) 50%, transparent)",
+          }}
+          aria-hidden
+        >
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="var(--tertiary-label)"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M9 11l3 3L22 4" />
+            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+          </svg>
+        </div>
         <p
-          className="text-[28px] font-semibold leading-tight tracking-tight"
+          className="text-[28px] font-bold leading-tight tracking-[-0.03em]"
           style={{ color: "var(--label)" }}
         >
           No tasks
         </p>
         <p
-          className="mt-2 max-w-sm text-[17px] leading-relaxed"
+          className="mt-2 max-w-[300px] text-[17px] leading-[1.45] tracking-[-0.01em]"
           style={{ color: "var(--secondary-label)" }}
         >
           {filter === "today"
@@ -55,8 +77,11 @@ export function TaskList() {
         <button
           type="button"
           onClick={openNewTask}
-          className="motion-safe-transition mt-8 min-h-[44px] rounded-full px-8 text-[17px] font-semibold text-white"
-          style={{ background: "var(--accent)" }}
+          className="motion-safe-transition mt-9 min-h-[48px] rounded-full px-10 text-[17px] font-semibold tracking-[-0.01em] text-white active:opacity-[0.88] motion-safe-press active:scale-[0.98]"
+          style={{
+            background: "var(--accent)",
+            boxShadow: "var(--shadow-fab)",
+          }}
         >
           New Task
         </button>
@@ -65,36 +90,55 @@ export function TaskList() {
   }
 
   return (
-    <div className="flex flex-col gap-6 pb-28">
+    <div className="flex flex-col gap-8 pb-32 pt-1">
       <p className="sr-only" aria-live="polite" aria-atomic="true">
         {a11yStatus}
       </p>
-      {nonEmptyGroups.map((key) => (
-        <section key={key} aria-labelledby={`heading-${key}`}>
-          <h2
-            id={`heading-${key}`}
-            className="sticky top-0 z-10 -mx-1 mb-2 px-1 py-2 text-[13px] font-semibold uppercase tracking-wide backdrop-blur-md"
-            style={{
-              color: "var(--secondary-label)",
-              background: "color-mix(in srgb, var(--bg) 85%, transparent)",
-            }}
-          >
-            {GROUP_LABELS[key as DateGroupKey]}
-          </h2>
-          <ul className="flex flex-col gap-2">
-            {groupedFiltered.get(key)!.map((task) => (
-              <li key={task.id}>
-                <TaskRow
-                  task={task}
-                  onToggle={handleToggle}
-                  onOpen={openEditTask}
-                  showDueSummary={showDueSummary}
-                />
-              </li>
-            ))}
-          </ul>
-        </section>
-      ))}
+      {nonEmptyGroups.map((key) => {
+        const groupTasks = groupedFiltered.get(key)!;
+        return (
+          <section key={key} aria-labelledby={`heading-${key}`}>
+            <h2
+              id={`heading-${key}`}
+              className="sticky top-0 z-10 -mx-1 mb-2.5 px-1 pb-1 pt-0.5 text-[13px] font-semibold uppercase tracking-[0.06em] backdrop-blur-xl"
+              style={{
+                color: "var(--secondary-label)",
+                background: "var(--sticky-header-bg)",
+              }}
+            >
+              {GROUP_LABELS[key as DateGroupKey]}
+            </h2>
+            <ul
+              className="overflow-hidden rounded-[var(--radius-row)] motion-safe-transition"
+              style={{
+                background: "var(--bg-grouped)",
+                boxShadow:
+                  "var(--shadow-sm), inset 0 0 0 1px color-mix(in srgb, var(--separator) 75%, transparent)",
+              }}
+            >
+              {groupTasks.map((task, index) => (
+                <li
+                  key={task.id}
+                  className="motion-safe-transition"
+                  style={
+                    index > 0
+                      ? { borderTop: "1px solid var(--separator)" }
+                      : undefined
+                  }
+                >
+                  <TaskRow
+                    task={task}
+                    onToggle={handleToggle}
+                    onOpen={openEditTask}
+                    showDueSummary={showDueSummary}
+                    grouped
+                  />
+                </li>
+              ))}
+            </ul>
+          </section>
+        );
+      })}
     </div>
   );
 }

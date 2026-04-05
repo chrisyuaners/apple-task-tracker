@@ -41,8 +41,10 @@ export function ThemeMenu({
   const [pref, setPref] = useState<ThemePreference>("system");
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect -- sync menu state with localStorage after mount */
     setPref(readPreference());
     applyTheme(readPreference());
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
   const setPreference = useCallback((next: ThemePreference) => {
@@ -64,78 +66,92 @@ export function ThemeMenu({
     return () => mq.removeEventListener("change", handler);
   }, [pref]);
 
+  const itemClass =
+    "flex cursor-pointer select-none items-center gap-2.5 rounded-[10px] px-3 py-2.5 text-[17px] outline-none transition-colors duration-150 data-[highlighted]:bg-[var(--fill-tertiary)]";
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button
           type="button"
-          className="motion-safe-transition flex h-11 w-11 items-center justify-center rounded-full"
+          className="motion-safe-transition flex h-10 w-10 items-center justify-center rounded-full active:bg-[var(--fill-tertiary)] md:hover:bg-[var(--fill-tertiary)]"
           style={{ color: "var(--accent)" }}
           aria-label="More options"
         >
-          <Ellipsis className="h-6 w-6" strokeWidth={1.75} />
+          <Ellipsis className="h-6 w-6" strokeWidth={1.85} />
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          className="motion-safe-transition z-[200] min-w-[220px] rounded-[14px] p-1 shadow-lg"
+          className="motion-safe-transition z-[200] min-w-[232px] rounded-[14px] p-1.5 backdrop-blur-xl"
           style={{
-            background: "var(--bg-elevated)",
-            boxShadow:
-              "0 12px 40px rgba(0,0,0,0.18), 0 0 0 1px var(--separator)",
+            background: "color-mix(in srgb, var(--bg-elevated) 92%, transparent)",
+            boxShadow: "var(--shadow-lg), inset 0 0 0 1px color-mix(in srgb, var(--separator) 70%, transparent)",
           }}
-          sideOffset={8}
+          sideOffset={10}
           align="end"
         >
           <div
-            className="px-3 py-2 text-[13px] font-semibold uppercase tracking-wide"
+            className="px-3 pb-1 pt-1.5 text-[12px] font-semibold uppercase tracking-[0.07em]"
             style={{ color: "var(--tertiary-label)" }}
           >
             Appearance
           </div>
           <DropdownMenu.Item
-            className="flex cursor-pointer select-none items-center gap-2 rounded-[10px] px-3 py-2.5 text-[17px] outline-none focus:bg-[var(--separator-opaque)] data-[highlighted]:bg-[var(--separator-opaque)]"
+            className={itemClass}
             style={{ color: "var(--label)" }}
             onSelect={() => setPreference("system")}
           >
-            <Smartphone className="h-5 w-5 shrink-0 opacity-70" />
-            <span className="flex-1">System</span>
+            <Smartphone className="h-[18px] w-[18px] shrink-0 opacity-65" />
+            <span className="flex-1 tracking-[-0.01em]">System</span>
             {pref === "system" ? (
-              <Check className="h-5 w-5 shrink-0" style={{ color: "var(--accent)" }} />
+              <Check
+                className="h-[18px] w-[18px] shrink-0"
+                strokeWidth={2.5}
+                style={{ color: "var(--accent)" }}
+              />
             ) : null}
           </DropdownMenu.Item>
           <DropdownMenu.Item
-            className="flex cursor-pointer select-none items-center gap-2 rounded-[10px] px-3 py-2.5 text-[17px] outline-none focus:bg-[var(--separator-opaque)] data-[highlighted]:bg-[var(--separator-opaque)]"
+            className={itemClass}
             style={{ color: "var(--label)" }}
             onSelect={() => setPreference("light")}
           >
-            <Sun className="h-5 w-5 shrink-0 opacity-70" />
-            <span className="flex-1">Light</span>
+            <Sun className="h-[18px] w-[18px] shrink-0 opacity-65" />
+            <span className="flex-1 tracking-[-0.01em]">Light</span>
             {pref === "light" ? (
-              <Check className="h-5 w-5 shrink-0" style={{ color: "var(--accent)" }} />
+              <Check
+                className="h-[18px] w-[18px] shrink-0"
+                strokeWidth={2.5}
+                style={{ color: "var(--accent)" }}
+              />
             ) : null}
           </DropdownMenu.Item>
           <DropdownMenu.Item
-            className="flex cursor-pointer select-none items-center gap-2 rounded-[10px] px-3 py-2.5 text-[17px] outline-none focus:bg-[var(--separator-opaque)] data-[highlighted]:bg-[var(--separator-opaque)]"
+            className={itemClass}
             style={{ color: "var(--label)" }}
             onSelect={() => setPreference("dark")}
           >
-            <Moon className="h-5 w-5 shrink-0 opacity-70" />
-            <span className="flex-1">Dark</span>
+            <Moon className="h-[18px] w-[18px] shrink-0 opacity-65" />
+            <span className="flex-1 tracking-[-0.01em]">Dark</span>
             {pref === "dark" ? (
-              <Check className="h-5 w-5 shrink-0" style={{ color: "var(--accent)" }} />
+              <Check
+                className="h-[18px] w-[18px] shrink-0"
+                strokeWidth={2.5}
+                style={{ color: "var(--accent)" }}
+              />
             ) : null}
           </DropdownMenu.Item>
           <DropdownMenu.Separator
-            className="my-1 h-px"
+            className="my-1.5 h-px mx-1"
             style={{ background: "var(--separator)" }}
           />
           <DropdownMenu.Item
-            className="flex cursor-pointer select-none items-center rounded-[10px] px-3 py-2.5 text-[17px] outline-none focus:bg-[var(--separator-opaque)] data-[highlighted]:bg-[var(--separator-opaque)]"
+            className={`${itemClass} font-medium`}
             style={{ color: "var(--accent)" }}
             onSelect={onExportJson}
           >
-            Export tasks as JSON
+            <span className="flex-1 tracking-[-0.01em]">Export tasks as JSON</span>
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Portal>

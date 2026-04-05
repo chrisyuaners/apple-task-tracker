@@ -9,17 +9,19 @@ export function UndoToast() {
 
   return (
     <div
-      className="motion-safe-transition fixed bottom-6 left-1/2 z-[150] flex w-[min(100%-2rem,400px)] -translate-x-1/2 items-center gap-3 rounded-[14px] px-4 py-3 shadow-lg"
+      className="motion-safe-transition fixed left-1/2 z-[45] flex w-[min(100%-2rem,380px)] -translate-x-1/2 items-center gap-3 rounded-[14px] px-4 py-3.5 backdrop-blur-xl"
       style={{
-        background: "var(--bg-elevated)",
+        bottom:
+          "max(5.75rem, calc(env(safe-area-inset-bottom, 0px) + 4.75rem))",
+        background: "color-mix(in srgb, var(--bg-elevated) 94%, transparent)",
         boxShadow:
-          "0 8px 32px rgba(0,0,0,0.2), 0 0 0 1px var(--separator)",
+          "var(--shadow-md), inset 0 0 0 1px color-mix(in srgb, var(--separator) 75%, transparent)",
       }}
       role="status"
       aria-live="polite"
     >
       <p
-        className="min-w-0 flex-1 text-[15px] leading-snug"
+        className="min-w-0 flex-1 text-[15px] leading-snug tracking-[-0.01em]"
         style={{ color: "var(--label)" }}
       >
         Task deleted
@@ -27,7 +29,7 @@ export function UndoToast() {
       <button
         type="button"
         onClick={undoDelete}
-        className="shrink-0 text-[17px] font-semibold"
+        className="shrink-0 rounded-lg px-1 py-1 text-[17px] font-semibold tracking-[-0.02em] active:opacity-60"
         style={{ color: "var(--accent)" }}
       >
         Undo

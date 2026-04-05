@@ -58,8 +58,10 @@ export function TasksProvider({ children }: { children: ReactNode }) {
   const [sheetTaskId, setSheetTaskId] = useState<string | null>(null);
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect -- client-only hydration from localStorage */
     setTasks(loadTasks());
     setHydrated(true);
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
   useEffect(() => {
