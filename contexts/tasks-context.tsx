@@ -44,6 +44,8 @@ type TasksContextValue = {
   sheetOpen: boolean;
   sheetTaskId: string | null;
   closeSheet: () => void;
+  /** Replaces all tasks (e.g. after JSON import). Persists via existing effect. */
+  replaceTasks: (tasks: Task[]) => void;
 };
 
 const TasksContext = createContext<TasksContextValue | null>(null);
@@ -202,6 +204,14 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     setSheetTaskId(null);
   }, []);
 
+  const replaceTasks = useCallback((next: Task[]) => {
+    clearUndoTimer();
+    setUndoTask(null);
+    setSheetOpen(false);
+    setSheetTaskId(null);
+    setTasks(next);
+  }, [clearUndoTimer]);
+
   useEffect(() => () => clearUndoTimer(), [clearUndoTimer]);
 
   const value = useMemo<TasksContextValue>(
@@ -223,6 +233,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
       sheetOpen,
       sheetTaskId,
       closeSheet,
+      replaceTasks,
     }),
     [
       tasks,
@@ -241,6 +252,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
       sheetOpen,
       sheetTaskId,
       closeSheet,
+      replaceTasks,
     ],
   );
 
