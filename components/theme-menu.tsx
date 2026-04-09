@@ -139,7 +139,7 @@ export function ThemeMenu({
       <DropdownMenu.Trigger asChild>
         <button
           type="button"
-          className="motion-safe-transition flex h-10 w-10 items-center justify-center rounded-full active:bg-[var(--fill-tertiary)] md:hover:bg-[var(--fill-tertiary)]"
+          className="motion-safe-transition flex h-10 w-10 cursor-pointer items-center justify-center rounded-full active:bg-[var(--fill-tertiary)] md:hover:bg-[var(--fill-tertiary)]"
           style={{ color: "var(--accent)" }}
           aria-label="More options"
         >
