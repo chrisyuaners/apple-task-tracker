@@ -34,7 +34,7 @@ export function SegmentedControl({ value, onChange }: Props) {
             role="tab"
             aria-selected={selected}
             onClick={() => onChange(item.id)}
-            className="motion-safe-transition relative min-h-[44px] flex-1 rounded-[8px] text-[15px] font-semibold tracking-[-0.02em] active:scale-[0.98]"
+            className="motion-safe-transition relative min-h-[44px] flex-1 cursor-pointer rounded-[8px] text-[15px] font-semibold tracking-[-0.02em] active:scale-[0.98]"
             style={{
               color: selected ? "var(--label)" : "var(--secondary-label)",
               background: selected ? "var(--bg-elevated)" : "transparent",

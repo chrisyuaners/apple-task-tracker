@@ -77,7 +77,7 @@ export function TaskList() {
         <button
           type="button"
           onClick={openNewTask}
-          className="motion-safe-transition mt-9 min-h-[48px] rounded-full px-10 text-[17px] font-semibold tracking-[-0.01em] text-white active:opacity-[0.88] motion-safe-press active:scale-[0.98]"
+          className="motion-safe-transition mt-9 min-h-[48px] cursor-pointer rounded-full px-10 text-[17px] font-semibold tracking-[-0.01em] text-white active:opacity-[0.88] motion-safe-press active:scale-[0.98]"
           style={{
             background: "var(--accent)",
             boxShadow: "var(--shadow-fab)",

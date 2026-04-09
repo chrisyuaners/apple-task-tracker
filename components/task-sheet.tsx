@@ -3,6 +3,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { useEffect, useMemo, useState } from "react";
 import { useTasks } from "@/contexts/tasks-context";
+import { formatLocalYMD, todayLocal } from "@/lib/dates";
 import type { Priority, Task } from "@/lib/types";
 
 const PRIORITIES: { id: Priority; label: string }[] = [
@@ -20,6 +21,14 @@ function emptyForm(): {
   return { title: "", notes: "", dueAt: "", priority: "medium" };
 }
 
+function newTaskFormWhenFilterIsToday(isTodayTab: boolean) {
+  const base = emptyForm();
+  if (isTodayTab) {
+    base.dueAt = formatLocalYMD(todayLocal());
+  }
+  return base;
+}
+
 function taskToForm(t: Task) {
   return {
     title: t.title,
@@ -35,6 +44,7 @@ export function TaskSheet() {
     sheetTaskId,
     closeSheet,
     tasks,
+    filter,
     addTask,
     updateTask,
     deleteTask,
@@ -50,11 +60,10 @@ export function TaskSheet() {
 
   useEffect(() => {
     if (!sheetOpen) return;
-    /* eslint-disable react-hooks/set-state-in-effect -- reset form when sheet opens or task changes */
     setError(null);
     if (editing) setForm(taskToForm(editing));
-    else setForm(emptyForm());
-    /* eslint-enable react-hooks/set-state-in-effect */
+    else setForm(newTaskFormWhenFilterIsToday(filter === "today"));
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- omit filter: snapshot when sheet opens only; including it resets form if tabs change while composing
   }, [sheetOpen, editing, sheetTaskId]);
 
   const title = editing ? "Edit task" : "New task";
@@ -128,7 +137,7 @@ export function TaskSheet() {
               <Dialog.Close asChild>
                 <button
                   type="button"
-                  className="motion-safe-transition min-h-[44px] min-w-[56px] rounded-lg px-2 text-left text-[17px] font-normal tracking-[-0.01em] active:opacity-60 md:hover:opacity-80"
+                  className="motion-safe-transition min-h-[44px] min-w-[56px] cursor-pointer rounded-lg px-2 text-left text-[17px] font-normal tracking-[-0.01em] active:opacity-60 md:hover:opacity-80"
                   style={{ color: "var(--accent)" }}
                 >
                   Cancel
@@ -143,7 +152,7 @@ export function TaskSheet() {
               <button
                 type="button"
                 onClick={handleSave}
-                className="motion-safe-transition min-h-[44px] min-w-[56px] rounded-lg px-2 text-right text-[17px] font-semibold tracking-[-0.01em] active:opacity-60 md:hover:opacity-90"
+                className="motion-safe-transition min-h-[44px] min-w-[56px] cursor-pointer rounded-lg px-2 text-right text-[17px] font-semibold tracking-[-0.01em] active:opacity-60 md:hover:opacity-90"
                 style={{ color: "var(--accent)" }}
               >
                 Save
@@ -234,7 +243,7 @@ export function TaskSheet() {
                     key={p.id}
                     type="button"
                     onClick={() => setForm((f) => ({ ...f, priority: p.id }))}
-                    className="motion-safe-transition min-h-[42px] rounded-[8px] px-4 text-[15px] font-medium tracking-[-0.01em] active:scale-[0.98]"
+                    className="motion-safe-transition min-h-[42px] cursor-pointer rounded-[8px] px-4 text-[15px] font-medium tracking-[-0.01em] active:scale-[0.98]"
                     style={{
                       color: sel ? "var(--label)" : "var(--secondary-label)",
                       background: sel ? "var(--bg-elevated)" : "transparent",
@@ -253,7 +262,7 @@ export function TaskSheet() {
               <button
                 type="button"
                 onClick={handleDelete}
-                className="motion-safe-transition mt-10 w-full rounded-[var(--radius-input)] py-3.5 text-[17px] font-semibold tracking-[-0.01em] active:opacity-75 md:hover:bg-[var(--fill-quaternary)]"
+                className="motion-safe-transition mt-10 w-full cursor-pointer rounded-[var(--radius-input)] py-3.5 text-[17px] font-semibold tracking-[-0.01em] active:opacity-75 md:hover:bg-[var(--fill-quaternary)]"
                 style={{
                   color: "var(--danger)",
                   background: "var(--bg-grouped-secondary)",

@@ -57,7 +57,7 @@ export function TaskApp() {
       <button
         type="button"
         onClick={openNewTask}
-        className="motion-safe-transition fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-[max(1.25rem,env(safe-area-inset-right))] z-40 flex h-[56px] w-[56px] items-center justify-center rounded-full text-white motion-safe-press active:scale-[0.92] active:opacity-90 md:hover:opacity-95"
+        className="motion-safe-transition fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-[max(1.25rem,env(safe-area-inset-right))] z-40 flex h-[56px] w-[56px] cursor-pointer items-center justify-center rounded-full text-white motion-safe-press active:scale-[0.92] active:opacity-90 md:hover:opacity-95"
         style={{
           background: "linear-gradient(180deg, color-mix(in srgb, var(--accent) 92%, white) 0%, var(--accent) 100%)",
           boxShadow: "var(--shadow-fab)",
